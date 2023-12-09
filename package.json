@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/cors": "^2.8.17",
     "@types/node": "^20.10.3",
     "amazon-paapi": "^1.0.7",
     "axios": "^1.6.2",
