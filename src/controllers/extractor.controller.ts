@@ -357,7 +357,12 @@ export const extractMetadata = async (
 
         const ogsOptions = {
           url: url,
-          fetchOptions: { headers: { "user-agent": userAgent } },
+          fetchOptions: {
+            headers: {
+              "user-agent":
+                "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+            },
+          },
         }
 
         const { error, result: ogsResult } = (await ogs(ogsOptions)) as {
