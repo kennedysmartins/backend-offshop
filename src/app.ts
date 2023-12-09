@@ -1,4 +1,5 @@
 import express from "express"
+import cors from "cors"
 import extractorRoutes from "./routes/extractor.routes"
 import statusRoutes from "./routes/status.routes"
 import dotenv from "dotenv"
@@ -10,6 +11,7 @@ const PORT = 4000
 
 // Use express.json() antes de configurar as rotas
 app.use(express.json())
+app.use(cors())
 
 // Extractor Routes
 app.use("/api/extractor", extractorRoutes)
