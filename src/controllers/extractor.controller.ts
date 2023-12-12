@@ -19,6 +19,7 @@ interface MetadataResult {
   productCode?: string
   breadcrumbs?: Record<string, any>
   productName?: string
+  image64?: string
 }
 
 interface OGSResult {
@@ -48,6 +49,18 @@ const formatPrice = (currentPrice:string) => {
     return priceWithoutSymbol
   }
   return currentPrice
+}
+
+async function downloadAndConvertToBase64(url: string):Promise<string> {
+  try {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    const imageBuffer = Buffer.from(response.data, 'binary');
+    const base64Image = imageBuffer.toString('base64');
+    return base64Image;
+  } catch (error) {
+    console.error('Erro ao baixar e converter a imagem:', error);
+    throw error;
+  }
 }
 
 
@@ -95,6 +108,7 @@ export const extractMetadata = async (
         )
           .find("img.ui-eshop-item__image")
           .attr("src")
+          result.image64 = await downloadAndConvertToBase64(result.imagePath||'')
         const priceElement = $(
           "span.andes-money-amount.andes-money-amount--cents-superscript"
         ).first()
@@ -222,6 +236,10 @@ export const extractMetadata = async (
           })
 
           result.imagePath = imageUrl
+          result.image64 = await downloadAndConvertToBase64(
+            result.imagePath || ""
+          )
+
         }
 
         const breadcrumbsList: string[] = []
@@ -281,6 +299,10 @@ export const extractMetadata = async (
         result.imagePath = $(
           'img[data-testid="image-selected-thumbnail"]'
         ).attr("src")
+          result.image64 = await downloadAndConvertToBase64(
+            result.imagePath || ""
+          )
+
 
         const codeElement = $("span.sc-dcJsrY.daMqkh:contains('Código')")
           .text()
@@ -348,6 +370,10 @@ export const extractMetadata = async (
           if (ogsResult.ogImage.length > 0) {
             // Use apenas a primeira imagem do OGS
             result.imagePath = ogsResult.ogImage[0].url
+          result.image64 = await downloadAndConvertToBase64(
+            result.imagePath || ""
+          )
+
           }
         }
       }
@@ -376,6 +402,10 @@ export const extractMetadata = async (
           if (ogsResult.ogImage.length > 0) {
             // Use apenas a primeira imagem do OGS
             result.imagePath = ogsResult.ogImage[0].url
+          result.image64 = await downloadAndConvertToBase64(
+            result.imagePath || ""
+          )
+
           }
         }
       }
