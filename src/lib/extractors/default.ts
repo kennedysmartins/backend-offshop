@@ -14,8 +14,15 @@ export const extractDefaultMetadata = async (
       result.imagePath = ogsResult.ogImage[0].url
       downloadImage(ogsResult.ogImage[0].url, amazon)
     }
+    result.title = ogsResult.ogTitle
     result.productName = ogsResult.ogTitle
     result.description = ogsResult.ogDescription
+    result.buyLink = url
+    result.originalPrice = ''
+    result.currentPrice = ''
+    result.productCode = ''
+    result.conditionPayment = ''
+    result.website = ''
 
     console.log("Extraído com sucesso")
   }
