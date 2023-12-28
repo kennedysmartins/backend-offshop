@@ -38,7 +38,7 @@ export const extractMetadata = async (
         finalUrl,
         $,
         amazon,
-        magazine,
+        magazine
       )
 
       // Additional processing, if neede
@@ -70,7 +70,7 @@ const extractMetadataFromUrl = async (
   $: cheerio.CheerioAPI,
   amazon: string,
   magazine: string
-): Promise<MetadataResult> => {
+): Promise<any> => {
   const result: MetadataResult = {}
 
   if (/mercadolivre/.test(finalUrl)) {
@@ -80,9 +80,19 @@ const extractMetadataFromUrl = async (
     return await extractAmazonMetadata(finalUrl, $, amazon)
   } else if (/magazineluiza|magalu|magazinevoce/.test(finalUrl)) {
     return await extractMagazineLuizaMetadata(finalUrl, $, magazine)
-  } else {
-    return await extractDefaultMetadata(finalUrl, amazon)
-  }
+    } else if (/offshop|offshop|offshop/.test(finalUrl)) {
+      const productUrl: string | undefined = $(
+        "a[target='_blank']"
+      ).attr("href")
+      if (productUrl) {
+        return await extractMetadata(productUrl, amazon, magazine, 5)
+      } else {
+        console.error("URL de produto não encontrada em offshop.")
+        return {}
+      }
+    } else {
+      return await extractDefaultMetadata(finalUrl, amazon)
+    }
 }
 
 
