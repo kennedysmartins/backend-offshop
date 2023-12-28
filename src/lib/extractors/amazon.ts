@@ -1,6 +1,10 @@
 import * as cheerio from "cheerio"
 import { MetadataResult } from "../../types"
-import { downloadAndConvertToBase64, downloadImage } from "../../lib/utils"
+import {
+  downloadAndConvertToBase64,
+  downloadImage,
+  extractOG,
+} from "../../lib/utils"
 import { formatPrice } from "../../lib/utils"
 
 export const extractAmazonMetadata = async (
@@ -10,6 +14,8 @@ export const extractAmazonMetadata = async (
 ): Promise<MetadataResult> => {
   const result: MetadataResult = {}
   result.website = "Amazon"
+  let imageUrl = ""
+
 
   if (amazon) {
     const parsedUrl = new URL(finalUrl)
@@ -93,7 +99,6 @@ export const extractAmazonMetadata = async (
   if (dynamicImageData) {
     const imageMap = JSON.parse(dynamicImageData)
     let maxWidth = 0
-    let imageUrl = ""
 
     // Iterating over the entries to find the image with the maximum width
     Object.entries(imageMap).forEach(([url, dimensions]) => {
@@ -108,9 +113,20 @@ export const extractAmazonMetadata = async (
         }
       }
     })
+  }
 
+  const ogsResult: any = await extractOG(finalUrl)
+
+  if (
+    ogsResult.ogImage &&
+    ogsResult.ogImage[0].url !=
+      "https://m.media-amazon.com/images/G/32/social_share/amazon_logo._CB633267191_.png"
+  ) {
+    result.imagePath = ogsResult.ogImage[0].url
+    downloadImage(ogsResult.ogImage[0].url, amazon)
+  } else {
     result.imagePath = imageUrl
-    if(result.imagePath) {
+    if (result.imagePath) {
       downloadImage(result.imagePath, amazon)
     }
   }
@@ -136,5 +152,5 @@ export const extractAmazonMetadata = async (
 
   result.breadcrumbs = nestedCategories
 
-  return result;
+  return result
 }
