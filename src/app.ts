@@ -10,8 +10,9 @@ const app = express()
 const PORT = 4000
 
 // Use express.json() antes de configurar as rotas
-app.use(express.json())
 app.use(cors())
+app.use(express.static("public"))
+app.use(express.json())
 
 // Extractor Routes
 app.use("/api/extractor", extractorRoutes)
