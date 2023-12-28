@@ -1,3 +1,4 @@
+import { extractWebsite } from "../lib/utils"
 import { extractAmazonMetadata } from "../lib/extractors/amazon"
 import { extractDefaultMetadata } from "../lib/extractors/default"
 import { extractMagazineLuizaMetadata } from "../lib/extractors/magalu"
@@ -71,7 +72,7 @@ const extractMetadataFromUrl = async (
   amazon: string,
   magazine: string
 ): Promise<any> => {
-  const result: MetadataResult = {}
+const result: MetadataResult = {}
 
   if (/mercadolivre/.test(finalUrl)) {
     const productUrl:string|undefined  = $("a.poly-component__link--action-link").attr("href")
@@ -85,10 +86,12 @@ const extractMetadataFromUrl = async (
         "a[target='_blank']"
       ).attr("href")
       if (productUrl) {
-        return await extractMetadata(productUrl, amazon, magazine, 5)
+        const resultNewUrl = await extractWebsite(productUrl)
+        $ = resultNewUrl.$
+        return await extractMetadataFromUrl(productUrl, $, amazon, magazine)
       } else {
         console.error("URL de produto não encontrada em offshop.")
-        return {}
+        return { error: "URL de produto não encontrada em offshop." }
       }
     } else {
       return await extractDefaultMetadata(finalUrl, amazon)
