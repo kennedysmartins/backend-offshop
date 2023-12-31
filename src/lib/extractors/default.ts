@@ -3,7 +3,8 @@ import { MetadataResult } from "../../types"
 
 export const extractDefaultMetadata = async (
   url: string,
-  amazon: string): Promise<MetadataResult> => {
+  user: string
+): Promise<MetadataResult> => {
   console.log("DefaultMetadata")
   let result: MetadataResult = {}
 
@@ -12,17 +13,17 @@ export const extractDefaultMetadata = async (
   if (ogsResult) {
     if (ogsResult.ogImage) {
       result.imagePath = ogsResult.ogImage[0].url
-      downloadImage(ogsResult.ogImage[0].url, amazon)
+      downloadImage(ogsResult.ogImage[0].url, user)
     }
     result.title = ogsResult.ogTitle
     result.productName = ogsResult.ogTitle
     result.description = ogsResult.ogDescription
-    result.buyLink = ''
-    result.originalPrice = ''
-    result.currentPrice = ''
-    result.productCode = ''
-    result.conditionPayment = ''
-    result.website = ''
+    result.buyLink = ""
+    result.originalPrice = ""
+    result.currentPrice = ""
+    result.productCode = ""
+    result.conditionPayment = ""
+    result.website = ""
 
     console.log("Extraído com sucesso")
   }

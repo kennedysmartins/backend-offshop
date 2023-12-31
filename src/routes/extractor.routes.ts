@@ -5,12 +5,13 @@ const router = express.Router()
 
 router.post("/", async (req, res) => {
   try {
-    const { url, amazon, magazine } = req.body
+    const { url, amazon, magazine, user } = req.body
 
     const result = await extractorController.extractMetadata(
       url,
       amazon,
-      magazine
+      magazine,
+      user
     )
     res.json(result)
   } catch (error) {

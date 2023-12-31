@@ -10,7 +10,8 @@ import { formatPrice } from "../../lib/utils"
 export const extractAmazonMetadata = async (
   finalUrl: string,
   $: cheerio.CheerioAPI,
-  amazon: string
+  amazon: string,
+  user: string,
 ): Promise<MetadataResult> => {
   const result: MetadataResult = {}
   result.website = "Amazon"
@@ -123,11 +124,11 @@ export const extractAmazonMetadata = async (
       "https://m.media-amazon.com/images/G/32/social_share/amazon_logo._CB633267191_.png"
   ) {
     result.imagePath = ogsResult.ogImage[0].url
-    downloadImage(ogsResult.ogImage[0].url, amazon)
+    downloadImage(ogsResult.ogImage[0].url, user)
   } else {
     result.imagePath = imageUrl
     if (result.imagePath) {
-      downloadImage(result.imagePath, amazon)
+      downloadImage(result.imagePath, user)
     }
   }
 

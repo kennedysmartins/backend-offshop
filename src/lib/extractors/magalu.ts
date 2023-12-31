@@ -1,13 +1,13 @@
 import * as cheerio from "cheerio"
 import { MetadataResult } from "../../types"
-import { downloadAndConvertToBase64, downloadImage } from "../../lib/utils"
+import { downloadImage } from "../../lib/utils"
 import { formatPrice } from "../../lib/utils"
 
 export const extractMagazineLuizaMetadata = async (
   finalUrl: string,
   $: cheerio.CheerioAPI,
   magazine: string,
-  amazon: string
+  user: string,
 ): Promise<MetadataResult> => {
   const result: MetadataResult = {}
   result.website = "Magazine Luiza"
@@ -42,7 +42,7 @@ export const extractMagazineLuizaMetadata = async (
     "src"
   )
   if (result.imagePath) {
-    downloadImage(result.imagePath, amazon)
+    downloadImage(result.imagePath, user)
   }
 
   const codeElement = $("span.sc-dcJsrY.daMqkh:contains('Código')")
@@ -83,5 +83,5 @@ export const extractMagazineLuizaMetadata = async (
   })
 
   result.breadcrumbs = nestedCategories
-  return result;
+  return result
 }

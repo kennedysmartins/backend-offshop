@@ -13,9 +13,12 @@ export const extractMetadata = async (
   url: string,
   amazon: string,
   magazine: string,
+  user: string,
   maxRetries: number = 1
 ): Promise<{ metadata?: MetadataResult; error?: string }> => {
   let retries = 0
+  console.log("user", user)
+
 
   while (retries < maxRetries) {
     console.log("♦ Extraindo...")
@@ -40,9 +43,9 @@ export const extractMetadata = async (
         finalUrl,
         $,
         amazon,
-        magazine
+        magazine,
+        user
       )
-
 
       return { metadata: result, error: undefined }
     } catch (error: any) {
@@ -69,7 +72,8 @@ const extractMetadataFromUrl = async (
   finalUrl: string,
   $: cheerio.CheerioAPI,
   amazon: string,
-  magazine: string
+  magazine: string,
+  user: string
 ): Promise<any> => {
   const result: MetadataResult = {}
 
@@ -77,16 +81,27 @@ const extractMetadataFromUrl = async (
     const productUrl: string | undefined = $(
       "a.poly-component__link--action-link"
     ).attr("href")
-    return await extractMercadoLivreMetadata(finalUrl, $, amazon, productUrl)
+    return await extractMercadoLivreMetadata(
+      finalUrl,
+      $,
+      amazon,
+      productUrl,
+      user
+    )
   } else if (/amzn|amazon/.test(finalUrl)) {
-    return await extractAmazonMetadata(finalUrl, $, amazon)
+    return await extractAmazonMetadata(finalUrl, $, amazon, user)
   } else if (/magazineluiza|magalu|magazinevoce/.test(finalUrl)) {
-    return await extractMagazineLuizaMetadata(finalUrl, $, magazine, amazon)
+    return await extractMagazineLuizaMetadata(
+      finalUrl,
+      $,
+      magazine,
+      user
+    )
   } else if (/pincei/.test(finalUrl)) {
     let productUrl = ""
     if (/pincei.com.br/.test(finalUrl)) {
-      const scriptTag:any = $("#__NEXT_DATA__")
-      const scriptContent:string = scriptTag.html()
+      const scriptTag: any = $("#__NEXT_DATA__")
+      const scriptContent: string = scriptTag.html()
       const scriptData: any = JSON.parse(scriptContent)
       productUrl = scriptData.props.pageProps.offer.url
     } else {
@@ -101,10 +116,11 @@ const extractMetadataFromUrl = async (
         resultNewUrl.finalUrl,
         $,
         amazon,
-        magazine
+        magazine,
+        user
       )
     } else {
-      return await extractMetadataFromUrl(productUrl, $, amazon, magazine)
+      return await extractMetadataFromUrl(productUrl, $, amazon, magazine, user)
     }
   } else if (/t.me|telegram/.test(finalUrl)) {
     let descricao: any = ""
@@ -132,7 +148,8 @@ const extractMetadataFromUrl = async (
         resultNewUrl.finalUrl,
         $new,
         amazon,
-        magazine
+        magazine,
+        user
       )
     } else {
       console.error("URL de produto não encontrada em telegram.")
@@ -148,7 +165,13 @@ const extractMetadataFromUrl = async (
       const resultNewUrl = await extractWebsite(productUrl)
       const $new = resultNewUrl.$
 
-      return await extractMetadataFromUrl(productUrl, $new, amazon, magazine)
+      return await extractMetadataFromUrl(
+        productUrl,
+        $new,
+        amazon,
+        magazine,
+        user
+      )
     } else {
       console.error("Unable to extract the URL.")
       return { error: "Unable to extract the URL." }
@@ -159,13 +182,13 @@ const extractMetadataFromUrl = async (
       const resultNewUrl = await extractWebsite(productUrl)
       $ = resultNewUrl.$
 
-      return await extractMetadataFromUrl(productUrl, $, amazon, magazine)
+      return await extractMetadataFromUrl(productUrl, $, amazon, magazine, user)
     } else {
       console.error("URL de produto não encontrada em offshop.")
       return { error: "URL de produto não encontrada em offshop." }
     }
   } else {
-    return await extractDefaultMetadata(finalUrl, amazon)
+    return await extractDefaultMetadata(finalUrl, user)
   }
 }
 

@@ -7,7 +7,8 @@ export const extractMercadoLivreMetadata = async (
   finalUrl: string,
   $: cheerio.CheerioAPI,
   amazon: string,
-  productUrl: string | undefined
+  productUrl: string | undefined,
+  user: string
 ): Promise<MetadataResult> => {
   const result: MetadataResult = {}
   result.website = "Mercado Livre"
@@ -29,7 +30,7 @@ export const extractMercadoLivreMetadata = async (
   ).first()
 
   if (result.imagePath) {
-    downloadImage(result.imagePath, amazon)
+    downloadImage(result.imagePath, user)
   }
 
   const priceText = priceElement.text().trim()

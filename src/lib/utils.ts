@@ -59,6 +59,7 @@ export const downloadImage = async (url: string, imageName: string) => {
   const writer = fs.createWriteStream(
     path.join(publicFolderPath, `${imageName}.jpg`)
   )
+  console.log(`Criada a imagem ${imageName}.jpg`)
 
   return new Promise<void>((resolve, reject) => {
     response.data.pipe(writer)
