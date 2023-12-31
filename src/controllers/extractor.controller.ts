@@ -81,7 +81,7 @@ const extractMetadataFromUrl = async (
   } else if (/amzn|amazon/.test(finalUrl)) {
     return await extractAmazonMetadata(finalUrl, $, amazon)
   } else if (/magazineluiza|magalu|magazinevoce/.test(finalUrl)) {
-    return await extractMagazineLuizaMetadata(finalUrl, $, magazine)
+    return await extractMagazineLuizaMetadata(finalUrl, $, magazine, amazon)
   } else if (/pincei/.test(finalUrl)) {
     let productUrl = ""
     if (/pincei.com.br/.test(finalUrl)) {

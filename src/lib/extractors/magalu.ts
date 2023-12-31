@@ -6,7 +6,8 @@ import { formatPrice } from "../../lib/utils"
 export const extractMagazineLuizaMetadata = async (
   finalUrl: string,
   $: cheerio.CheerioAPI,
-  magazine: string
+  magazine: string,
+  amazon: string
 ): Promise<MetadataResult> => {
   const result: MetadataResult = {}
   result.website = "Magazine Luiza"
@@ -41,11 +42,7 @@ export const extractMagazineLuizaMetadata = async (
     "src"
   )
   if (result.imagePath) {
-    downloadImage(result.imagePath, magazine)
-  }
-
-  if (result.imagePath) {
-    downloadImage(result.imagePath, magazine)
+    downloadImage(result.imagePath, amazon)
   }
 
   const codeElement = $("span.sc-dcJsrY.daMqkh:contains('Código')")
