@@ -50,6 +50,15 @@ export const downloadImage = async (url: string, imageName: string) => {
     fs.mkdirSync(publicFolderPath)
   }
 
+  // Remove todas as imagens que começam com o nome específico
+  const filesToRemove = fs
+    .readdirSync(publicFolderPath)
+    .filter((file) => file.startsWith(`${imageName.split('-')[0]}-`))
+    .map((file) => path.join(publicFolderPath, file))
+
+  filesToRemove.forEach((file) => fs.unlinkSync(file))
+  console.log(`Removidas as imagens ${filesToRemove.join(", ")}`)
+
   const response = await axios({
     method: "GET",
     url: url,
