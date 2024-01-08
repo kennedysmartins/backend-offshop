@@ -15,17 +15,15 @@ export const extractAmazonMetadata = async (
 ): Promise<MetadataResult> => {
   const result: MetadataResult = {}
   const ogsResult: any = await extractOG(finalUrl)
-  if (ogsResult.ogImage) {
-    result.imagePath = ogsResult.ogImage[0].url
-    downloadImage(ogsResult.ogImage[0].url, user)
-  }
-  result.title = ogsResult.ogTitle
-  result.productName = ogsResult.ogTitle
-  result.description = ogsResult.ogDescription
+ 
+  result.title = ""
+  result.productName = ""
+  result.description = ""
   result.buyLink = ""
   result.originalPrice = ""
   result.currentPrice = ""
   result.productCode = ""
+  result.imagePath = ""
   result.conditionPayment = ""
   result.website = "Amazon"
   let imageUrl = ""
