@@ -11,12 +11,24 @@ export const extractAmazonMetadata = async (
   finalUrl: string,
   $: cheerio.CheerioAPI,
   amazon: string,
-  user: string,
+  user: string
 ): Promise<MetadataResult> => {
   const result: MetadataResult = {}
+  const ogsResult: any = await extractOG(finalUrl)
+  if (ogsResult.ogImage) {
+    result.imagePath = ogsResult.ogImage[0].url
+    downloadImage(ogsResult.ogImage[0].url, user)
+  }
+  result.title = ogsResult.ogTitle
+  result.productName = ogsResult.ogTitle
+  result.description = ogsResult.ogDescription
+  result.buyLink = ""
+  result.originalPrice = ""
+  result.currentPrice = ""
+  result.productCode = ""
+  result.conditionPayment = ""
   result.website = "Amazon"
   let imageUrl = ""
-
 
   if (amazon) {
     const parsedUrl = new URL(finalUrl)
@@ -115,8 +127,6 @@ export const extractAmazonMetadata = async (
       }
     })
   }
-
-  const ogsResult: any = await extractOG(finalUrl)
 
   if (
     ogsResult.ogImage &&
