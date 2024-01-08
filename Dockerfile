@@ -1,5 +1,5 @@
 # Use uma imagem base Node.js LTS
-FROM node:14
+FROM node:19-bullseye
 
 # Crie e defina o diretório de trabalho
 WORKDIR /usr/src/app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Exponha a porta que o aplicativo vai usar
-EXPOSE 3000
+EXPOSE 4000
 
 # Comando para iniciar o aplicativo
 CMD ["npm", "start"]

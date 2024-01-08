@@ -9,6 +9,9 @@ dotenv.config()
 const app = express()
 const PORT = 4000
 
+// Log da versão do Node.js
+console.log("Versão do Node.js:", process.version);
+
 // Use express.json() antes de configurar as rotas
 app.use(cors())
 app.use(express.static("public"))
@@ -18,6 +21,10 @@ app.use(express.json())
 app.use("/api/extractor", extractorRoutes)
 app.use("/api/status", statusRoutes)
 
-app.listen(PORT, () => {
-  console.log("Servidor extractor 01 rodando em http://localhost:" + PORT)
-})
+const server: any = app.listen(PORT, () => {
+  const address = server.address();
+  const host = address?.address === "::" ? "localhost" : address?.address;
+  const port = address?.port;
+
+  console.log(`Servidor extractor 01 rodando em http://${host}:${port}`);
+});
